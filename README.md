@@ -94,7 +94,7 @@ START: Do you have O2Physics installed?
                            ├─ NO ──> Install ACTS:
                            │         aliBuild build ACTS --defaults o2
                            │
-                           └─ YES ──> READY FOR THE NEXT DECISION TREE!
+                           └─ YES ──> READY FOR THE NEXT DECISION TREE! ✓
 
 Troubleshooting:
 ├─ Build fails? ──> Check: disk space, internet connection, system dependencies, RAM
