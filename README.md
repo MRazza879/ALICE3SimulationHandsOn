@@ -158,14 +158,14 @@ Troubleshooting:
 └─ ACTS build fails? ──> Get in touch
 ```
 
-### ALIEN Certificate Decision Tree
+### Grid certificate Decision Tree
 
-For several exercises you will need an ALIEN certificate. Follow the decision tree below:
+For several exercises you will need an Grid certificate. Follow the decision tree below:
 
 ```
-START: Do you have an ALIEN certificate?
+START: Do you have an Grid certificate?
 │
-├─ NO ──> Generate your ALIEN certificate:
+├─ NO ──> Generate your Grid certificate:
 │         Follow: https://alice-doc.github.io/alice-analysis-tutorial/start/cert.html
 │         │
 │         └──> Steps summary:
