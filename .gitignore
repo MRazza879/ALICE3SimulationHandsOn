@@ -40,3 +40,5 @@
 # debug information files
 *.dwo
 *.pcm
+__pycache__/*
+*.root
