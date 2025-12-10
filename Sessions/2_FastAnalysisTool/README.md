@@ -3,7 +3,7 @@ https://docs.google.com/presentation/d/1U-D6RVjo77e6QhOdkUnQzyk-gH2Jilij9oTfpMop
 
 ## Scope of the session
 - Learn what FAT does 10 min
-- Learn how to extract some detector performance from FAT 20 min
+- Build you own detector layout, learn how to extract momentum resolution from FAT and compare to the ACTS output 20 min
 - Learn how to produce LUTs 15 min
 
 ## At the end:
