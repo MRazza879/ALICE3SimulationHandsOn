@@ -40,5 +40,9 @@
 # debug information files
 *.dwo
 *.pcm
-__pycache__/*
-*.root
+__pycache__/
+AutoDict_vector_vector_unsigned_int__.cxx
+core_dump_*
+dpl-config.json
+AnalysisResults.root
+AnalysisResults_trees.root

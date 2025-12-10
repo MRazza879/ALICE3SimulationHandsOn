@@ -1,0 +1,16 @@
+{
+    "Surfaces": {
+        "acts-geometry-hierarchy-map": {
+            "format-version": 0,
+            "value-identifier": "Material Surface Map"
+        },
+        "entries": []
+    },
+    "Volumes": {
+        "acts-geometry-hierarchy-map": {
+            "format-version": 0,
+            "value-identifier": "Material Volume Map"
+        },
+        "entries": []
+    }
+}
