@@ -600,7 +600,7 @@
     },
     "lookUpTables.lutEl": {
       "values": [
-        "/tmp/lutCovm.el.20kG.rmin20.geometry_v2.dat"
+        "ccdb:Users/j/jekarlss/LookUpTables/petals/el"
       ]
     },
     "lookUpTables.lutHe3": {
@@ -608,22 +608,22 @@
     },
     "lookUpTables.lutKa": {
       "values": [
-        "/tmp/lutCovm.ka.20kG.rmin20.geometry_v2.dat"
+        "ccdb:Users/f/fcolamar/LUT_ALICE3/3Petals_Inclined_2IRISHits_v2/K"
       ]
     },
     "lookUpTables.lutMu": {
       "values": [
-        "/tmp/lutCovm.mu.20kG.rmin20.geometry_v2.dat"
+        "ccdb:Users/j/jekarlss/LookUpTables/petals/mu"
       ]
     },
     "lookUpTables.lutPi": {
       "values": [
-        "/tmp/lutCovm.pi.20kG.rmin20.geometry_v2.dat"
+        "ccdb:Users/f/fcolamar/LUT_ALICE3/3Petals_Inclined_2IRISHits_v2/pi"
       ]
     },
     "lookUpTables.lutPr": {
       "values": [
-        "/tmp/lutCovm.pr.20kG.rmin20.geometry_v2.dat"
+        "ccdb:Users/j/jekarlss/LookUpTables/petals/pr"
       ]
     },
     "lookUpTables.lutTr": {
