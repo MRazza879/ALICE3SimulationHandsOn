@@ -1,8 +1,8 @@
 #include "lutCovm.hh"
 
 TGraph* lutread(const char* filename = "lutCovm.dat",
-             double eta = 0.,
-             double nch = 100.)
+                double eta = 0.,
+                double nch = 100.)
 {
 
   // input file

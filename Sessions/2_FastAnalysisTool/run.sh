@@ -31,6 +31,6 @@ root -l -b <<EOF
     TDatabasePDG::Instance()->AddParticle("helium3", "helium3", 2.80839160743, kTRUE, 0.0, 6, "Nucleus", 1000020030);
     TDatabasePDG::Instance()->AddAntiParticle("anti-helium3", -1000020030);
 
-    lutWrite_detector("lut_table.dat", 11, 50, 20);
+    lutWrite_detector("lutCovm.el.5kG.20cm.dat", 11, 50, 20);
 
 EOF
