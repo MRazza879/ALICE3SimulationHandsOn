@@ -1,20 +1,20 @@
 #!/bin/bash
 
 root -l -b <<EOF
-.L AliLog.cxx+
-.L AliCheb3DCalc.cxx+
-.L AliCheb3D.cxx+
-.L AliMagWrapCheb.cxx+
-.L AliMagFast.cxx+
-.L AliMagF.cxx+
+    .L AliLog.cxx+
+    .L AliCheb3DCalc.cxx+
+    .L AliCheb3D.cxx+
+    .L AliMagWrapCheb.cxx+
+    .L AliMagFast.cxx+
+    .L AliMagF.cxx+
 
-.L AliVMisc.cxx+
-.L AliPDG.cxx++
-.L AliVVertex.cxx+
-.L AliPID.cxx+
-.L AliVParticle.cxx+
-.L AliVTrack.cxx+
-.L AliExternalTrackParam.cxx+
+    .L AliVMisc.cxx+
+    .L AliPDG.cxx++
+    .L AliVVertex.cxx+
+    .L AliPID.cxx+
+    .L AliVParticle.cxx+
+    .L AliVTrack.cxx+
+    .L AliExternalTrackParam.cxx+
 
     .L DetectorK/HistoManager.cxx+
     .L DetectorK/DetectorK.cxx+
