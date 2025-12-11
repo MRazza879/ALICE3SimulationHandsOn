@@ -1,32 +1,24 @@
 #!/usr/bin/env python3
+import argparse
+import sys
 from acts.examples.reconstruction import (
     addSeeding,
-    # TruthSeedRanges,
     SeedFinderConfigArg,
     SeedFinderOptionsArg,
     SeedFilterConfigArg,
     SpacePointGridConfigArg,
     SeedingAlgorithmConfigArg,
     SeedingAlgorithm,
-    # ParticleSmearingSigmas,
     addCKFTracks,
-    addTruthTrackingGsf,
-    #    CKFPerformanceConfig,
     TrackSelectorConfig,
-    addKalmanTracks,
     addAmbiguityResolution,
     AmbiguityResolutionConfig,
     CkfConfig,
-    addVertexFitting,
-    VertexFinder,
-    addSpacePointsMaking,  # May 2025
-    addHoughVertexFinding,  # May 2025
 )
 from acts.examples.simulation import (
     addParticleGun,
     MomentumConfig,
     EtaConfig,
-    PhiConfig,
     ParticleConfig,
     addPythia8,
     addGenParticleSelection,
@@ -35,7 +27,6 @@ from acts.examples.simulation import (
     addGeant4,
     ParticleSelectorConfig,
     addDigitization,
-    addDigiParticleSelection,
 )
 import pathlib
 import acts
@@ -48,8 +39,6 @@ u = acts.UnitConstants
 
 geo_dir = pathlib.Path.cwd()
 
-import sys
-
 
 def getArgumentParser():
     """Get arguments from command line"""
@@ -57,7 +46,7 @@ def getArgumentParser():
         description="Command line arguments for full chain setup"
     )
 
-    ##### General parameters
+    # General parameters
     parser.add_argument(
         "--nThreads", "-nthr", help="Number of threads", type=int, default=-1
     )
@@ -91,22 +80,7 @@ def getArgumentParser():
         default="test",
     )
 
-    # parser.add_argument(
-    #     "-i",
-    #     "--indir",
-    #     dest="indir",
-    #     help="Directory with input root files",
-    #     default="./",
-    # )
-    # parser.add_argument(
-    #     "-o",
-    #     "--output",
-    #     dest="outdir",
-    #     help="Output directory for new ntuples",
-    #     default="./",
-    # )
-
-    ##### SIM: Particle simulation - particle gun
+    # SIM: Particle simulation - particle gun
 
     parser.add_argument(
         "--gunMult",
@@ -148,7 +122,7 @@ def getArgumentParser():
         action="store_true",  # default is false
     )
 
-    ##### SIM: Particle simulation - PYTHIA
+    # SIM: Particle simulation - PYTHIA
     parser.add_argument(
         "--usePythia",
         help="Use Pythia8 instead of particle gun",
@@ -179,7 +153,7 @@ def getArgumentParser():
         default=50,
     )
 
-    ##### SIM: Detector response sim params
+    # SIM: Detector response sim params
     parser.add_argument(
         "--detSim",
         type=str,
@@ -204,7 +178,7 @@ def getArgumentParser():
         default=4.2,
     )
 
-    ##### REC: Seeding params
+    # REC: Seeding params
     parser.add_argument(
         "--seedingLayers",
         type=str,
@@ -260,7 +234,7 @@ def getArgumentParser():
         default=2,  # ok for pp, for PbPb should be 3 or more?
     )
 
-    ##### REC: tracking params
+    # REC: tracking params
     parser.add_argument(
         "--nMeasurementsMin",
         dest="nMeasurementsMin",
@@ -317,7 +291,7 @@ def getArgumentParser():
         default=False,
     )
 
-    ##### Special flags for tracking in several iterations
+    # Special flags for tracking in several iterations
     parser.add_argument(
         "--iterationId",
         dest="iterationId",
@@ -335,13 +309,11 @@ def getArgumentParser():
     return parser
 
 
-import argparse
-
 pars = getArgumentParser().parse_args()
 
 
 ##########################
-##### SOME OTHER PARAMS
+# SOME OTHER PARAMS
 ##########################
 
 IA_collisionRegion_forSeeds = (
@@ -388,20 +360,10 @@ decorators = detector.contextDecorators()
 
 field = acts.ConstantBField(acts.Vector3(0.0, 0.0, pars.MF * u.T))
 if pars.useFieldMap:
+    print("Using field map")
     field = acts.examples.MagneticFieldMapXyz(
-        "../try_MF_solenoid_dipole/fieldMap_Alice3_with_absorber_2T_solenoid_5-9-23.txt"
+        "fieldMap_Alice3_with_absorber_2T_solenoid_5-9-23.txt"
     )
-# field = acts.examples.MagneticFieldMapXyz( "../try_MF_solenoid_dipole/fieldMap_Alice3_with_absorber_1T_solenoid_v2_5-9-23.txt" )
-# field = acts.examples.MagneticFieldMapRz( "../try_MF_solenoid_dipole/L3_r_z_Br_Bz_in_mm_extended_by_hand.txt")
-# field = acts.examples.MagneticFieldMapRz( "../try_MF_solenoid_dipole/1T_7.5m_solenoid_1m_free_bore.txt" ) # NEEDS MORE TUNINGS?..
-
-# more info https://github.com/acts-project/acts/blob/v27.1.0/Examples/Scripts/Python/bfield_writing.py :
-
-# field = acts.examples.MagneticFieldMapRz( "../try_MF_solenoid_dipole/8m_solenoid_no_iron_TWICE_REDUCED_FIELD.txt")
-# field = acts.examples.MagneticFieldMapXyz( "../try_MF_solenoid_dipole/fieldMap_solenoid_dipoles_4-10-21_xyz_in_mm.txt" )
-# field = acts.examples.MagneticFieldMapXyz( "fieldMap_solenoid_dipoles_4-10-21_xyz_in_mm_TWICE_REDUCED_FIELD.txt" )
-# field = acts.examples.MagneticFieldMapXyz( "fieldMap_solenoid_dipoles_4-10-21_xyz_in_mm_StretchedPointsZ_by_1.25.txt" )
-
 
 rnd = acts.examples.RandomNumbers(seed=42)
 
@@ -419,7 +381,7 @@ if not pars.isUsedHitsRemoved:
             ),
             EtaConfig(pars.gunEtaRange[0], pars.gunEtaRange[1], uniform=True),
             # PhiConfig(0, 0.001), #, uniform=True),
-            ### list of available particles: https://github.com/acts-project/acts/blob/main/Core/include/Acts/Definitions/PdgParticle.hpp#L21
+            # list of available particles: https://github.com/acts-project/acts/blob/main/Core/include/Acts/Definitions/PdgParticle.hpp#L21
             ParticleConfig(
                 pars.gunMult,
                 acts.PdgParticle(pars.gunPID),
@@ -473,7 +435,7 @@ if not pars.isUsedHitsRemoved:
                 # for Pb-Pb:
                 beam=acts.PdgParticle.eLead,
                 cmsEnergy=5.36 * acts.UnitConstants.TeV,  # 5 * acts.UnitConstants.TeV,
-                # # hardProcess=[ "SoftQCD:inelastic = on", "HeavyIon:SigFitErr =  0.02,0.02,0.1,0.05,0.05,0.0,0.1,0.0",\
+                # # hardProcess=[ "SoftQCD:inelastic = on", "HeavyIon:SigFitErr =  0.02,0.02,0.1,0.05,0.05,0.0,0.1,0.0",
                 hardProcess=[
                     "SoftQCD:inelastic = on",
                     "HeavyIon:SigFitErr =  0.02,0.02,0.1,0.05,0.05,0.0,0.1,0.0",
@@ -633,30 +595,6 @@ s = addDigitization(
 # auto channelsRes = m_channelizer.channelize() - https://github.com/acts-project/acts/blob/v36.2.1/Examples/Algorithms/Digitization/src/DigitizationAlgorithm.cpp#L212
 
 
-# addDigiParticleSelection(
-#     s,
-#     ParticleSelectorConfig(
-#         eta=(-4.1,4.1), pt=(1 * u.MeV, None), removeNeutral=True, # May 2025
-#         hits=(9, None),  # Nov 2025
-#         # rho=(0.0, 24 * u.mm),
-#         # absZ=(0.0, 1.0 * u.m),
-#     ),
-# )
-
-# s = addHoughVertexFinding(
-#     s,
-#     outputDirRoot=outputDir,
-#     inputSpacePoints=addSpacePointsMaking(
-#         s,
-#         trackingGeometry,
-#         geo_dir / "geoSelectionForSeedingInner_BARREL_LayersOnly.json",
-#         outputName = "spacePointsForHoughVertexing",
-#         logLevel = acts.logging.VERBOSE
-#     ),
-#     logLevel = acts.logging.VERBOSE
-# )
-
-
 strWhichSeedingLayers = ""
 if pars.seedingLayers == "VD":
     strWhichSeedingLayers = (
@@ -677,9 +615,6 @@ s = addSeeding(
     field,
     SeedFinderConfigArg(
         r=(None, 210 * u.mm),  # iTOF is at 190 mm! if we want it for seeding
-        # r=(None, 150 * u.mm),
-        # r=(None, 30 * u.mm),
-        # deltaR=(1 * u.mm, 120 * u.mm),  # deltaR=(1. * u.mm, 60 * u.mm),
         deltaR=(1 * u.mm, 200 * u.mm),  # deltaR=(1. * u.mm, 60 * u.mm),
         collisionRegion=(
             -IA_collisionRegion_forSeeds * u.mm,
@@ -688,7 +623,8 @@ s = addSeeding(
         z=(-1000 * u.mm, 1000 * u.mm),
         maxSeedsPerSpM=pars.maxSeedsPerSpM,  # 2 is minimum, >2 is better for Pb-Pb
         sigmaScattering=pars.sigmaScattering,
-        radLengthPerSeed=pars.radLengthPerSeed,  # more info: https://github.com/acts-project/acts/blob/main/Core/include/Acts/Seeding/SeedFinderConfig.hpp
+        # more info: https://github.com/acts-project/acts/blob/main/Core/include/Acts/Seeding/SeedFinderConfig.hpp
+        radLengthPerSeed=pars.radLengthPerSeed,
         minPt=pars.minSeedPt * u.GeV,
         impactMax=pars.impParForSeeds
         * u.mm,  # important! IB vs ML seeds (e.g. 1 mm is ok for IB seeds, 5 mm - for ML seeds)
@@ -722,63 +658,17 @@ s = addSeeding(
         # Maximum number of normal seeds (not classified as "high-quality" seeds)
         # in seed confirmation
         maxSeedsPerSpMConf=IA_maxSeedsPerSpMConf,  # 1 - USED_FOR_AUG_2025,#3, # CRUCIAL!!!!!!
-        maxQualitySeedsPerSpMConf=IA_maxQualitySeedsPerSpMConf,  # 1 - USED_FOR_AUG_2025,   # Core/include/Acts/Seeding/SeedFilterConfig.hpp
+        # 1 - USED_FOR_AUG_2025,   # Core/include/Acts/Seeding/SeedFilterConfig.hpp
+        maxQualitySeedsPerSpMConf=IA_maxQualitySeedsPerSpMConf,
         # Maximum number of "high-quality" seeds for each inner-middle SP-dublet in
         # seed confirmation. If the limit is reached we check if there is a normal
         # quality seed to be replaced
     ),
     SpacePointGridConfigArg(
-        # zBinEdges=[
-        # -4000.0,
-        # -2500.0,
-        # -2000.0,
-        # -1320.0,
-        # -625.0,
-        # -350.0,
-        # -250.0,
-        # 250.0,
-        # 350.0,
-        # 625.0,
-        # 1320.0,
-        # 2000.0,
-        # 2500.0,
-        # 4000.0,
-        # ],
         impactMax=1.0 * u.mm,
         phiBinDeflectionCoverage=3,
     ),
     SeedingAlgorithmConfigArg(
-        # zBinNeighborsTop=[
-        # [0, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 0],
-        # ],
-        # zBinNeighborsBottom=[
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # ],
-        # numPhiNeighbors=1,
     ),
     # particleHypothesis=acts.ParticleHypothesis.pion, # IA
     # particleHypothesis=acts.ParticleHypothesis.electron, # IA
@@ -808,7 +698,7 @@ if False:  # if we want to save seeds to root file
 #     logLevel = acts.logging.VERBOSE
 # )
 
-### useful info: https://github.com/acts-project/acts/blob/main/Core/include/Acts/TrackFinding/MeasurementSelector.hpp
+# useful info: https://github.com/acts-project/acts/blob/main/Core/include/Acts/TrackFinding/MeasurementSelector.hpp
 s = addCKFTracks(
     s,
     trackingGeometry,
@@ -831,12 +721,6 @@ s = addCKFTracks(
     logLevel=acts.logging.INFO,
 )
 
-# s = addTruthTrackingGsf(
-#     s,
-#     trackingGeometry,
-#     field,
-# )
-
 s = addAmbiguityResolution(
     s,
     AmbiguityResolutionConfig(
@@ -847,12 +731,3 @@ s = addAmbiguityResolution(
 )
 
 s.run()
-
-
-# import shutil
-
-# shutil.copyfile("full_chain_Nov_2025.py", IA_outputDirName + "/full_chain_Nov_2025.py")
-
-# # IA_outputDirName="test"
-# with open("lastRun.txt", "w") as fh:
-#     fh.write(IA_outputDirName + "\n")
